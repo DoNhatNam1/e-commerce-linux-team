@@ -1,0 +1,100 @@
+x-common-environment-nextjs: &common-environment-nextjs
+  environment:
+    DATABASE_URL: ${DATABASE_URL}
+    APPID: ${APPID}
+    KEY1: ${KEY1}
+    KEY2: ${KEY2}
+    NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL}
+    NEXT_PUBLIC_PAYMENT_SERVER: ${NEXT_PUBLIC_PAYMENT_SERVER}
+    UPLOADTHING_APP_ID: ${UPLOADTHING_APP_ID}
+    UPLOADTHING_SECRET: ${UPLOADTHING_SECRET}
+    KINDE_CLIENT_ID: ${KINDE_CLIENT_ID}
+    KINDE_CLIENT_SECRET: ${KINDE_CLIENT_SECRET}
+    KINDE_ISSUER_URL: ${KINDE_ISSUER_URL}
+    KINDE_SITE_URL: ${KINDE_SITE_URL}
+    KINDE_POST_LOGOUT_REDIRECT_URL: ${KINDE_POST_LOGOUT_REDIRECT_URL}
+    KINDE_POST_LOGIN_REDIRECT_URL: ${KINDE_POST_LOGIN_REDIRECT_URL}
+    RESEND_API_KEY: ${RESEND_API_KEY}
+
+x-common-environment-nodejs: &common-environment-nodejs
+  environment:
+    DATABASE_URL: ${DATABASE_URL}
+    APPID: ${APPID}
+    KEY1: ${KEY1}
+    KEY2: ${KEY2}
+    ZLP_MERCHANT_CALLBACK_URL: ${ZLP_MERCHANT_CALLBACK_URL}
+    PAYMENT_PORT: ${PAYMENT_PORT}
+    PAYMENT_HOST: ${PAYMENT_HOST}
+
+x-common-args-nextjs: &common-args-nextjs
+  args:
+    DATABASE_URL: ${DATABASE_URL}
+    APPID: ${APPID}
+    KEY1: ${KEY1}
+    KEY2: ${KEY2}
+    UPLOADTHING_APP_ID: ${UPLOADTHING_APP_ID}
+    UPLOADTHING_SECRET: ${UPLOADTHING_SECRET}
+    KINDE_CLIENT_ID: ${KINDE_CLIENT_ID}
+    KINDE_CLIENT_SECRET: ${KINDE_CLIENT_SECRET}
+    KINDE_ISSUER_URL: ${KINDE_ISSUER_URL}
+    KINDE_SITE_URL: ${KINDE_SITE_URL}
+    KINDE_POST_LOGOUT_REDIRECT_URL: ${KINDE_POST_LOGOUT_REDIRECT_URL}
+    KINDE_POST_LOGIN_REDIRECT_URL: ${KINDE_POST_LOGIN_REDIRECT_URL}
+    RESEND_API_KEY: ${RESEND_API_KEY}
+    ZLP_MERCHANT_CALLBACK_URL: ${ZLP_MERCHANT_CALLBACK_URL}
+    NEXT_PUBLIC_PAYMENT_SERVER: ${NEXT_PUBLIC_PAYMENT_SERVER}
+    NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL}
+
+x-common-args-nodejs: &common-args-nodejs
+  args:
+    DATABASE_URL: ${DATABASE_URL}
+    APPID: ${APPID}
+    KEY1: ${KEY1}
+    KEY2: ${KEY2}
+    PAYMENT_PORT: ${PAYMENT_PORT}
+    PAYMENT_HOST: ${PAYMENT_HOST}
+    ZLP_MERCHANT_CALLBACK_URL: ${ZLP_MERCHANT_CALLBACK_URL}
+
+services:
+  nx_nextjs_auth_buy_step_product_c:
+    container_name: nx_nextjs_auth_buy_step_product_c
+    image: donhatnamdocker/nx_nextjs_auth_buy_step_product_service:v14.2.3-Beta
+    build:
+      <<: *common-args-nextjs
+      dockerfile: ./apps/auth-buy-step-product/Dockerfile
+      target: development
+      context: .
+    command: npm run serve:auth-buy-step-product
+    restart: unless-stopped
+    expose:
+      - 4200
+    ports:
+      - "4200:4200"
+    <<: *common-environment-nextjs
+    depends_on:
+      - nx_nodejs_api_payment_c
+    volumes:
+      - .:/app
+      - /app/node_modules
+  nx_nodejs_api_payment_c:
+    container_name: nx_nodejs_api_payment_c
+    image: donhatnamdocker/nx_nodejs_api_payment_c_service:v20.4.6-Beta
+    build:
+      <<: *common-args-nodejs
+      dockerfile: ./apps/api-payment/Dockerfile
+      target: development
+      context: .
+    command: npm run serve:api-payment
+    restart: unless-stopped
+    expose:
+      - 5000
+    ports:
+      - "5000:5000"
+    <<: *common-environment-nodejs
+    volumes:
+      - .:/app
+      - /app/node_modules
+networks:
+  default:
+    name: example_dev_network
+    driver: bridge

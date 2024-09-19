@@ -1,0 +1,176 @@
+{
+  "name": "auth-buy-step-product",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/auth-buy-step-product",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/auth-buy-step-product"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/auth-buy-step-product"
+        },
+        "production": {
+          "generateLockfile": true
+        }
+      },
+      "dependsOn": ["^build", "build-custom-server"]
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "auth-buy-step-product:build",
+        "dev": true,
+        "customServerTarget": "auth-buy-step-product:serve-custom-server"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "auth-buy-step-product:build:development",
+          "dev": true,
+          "customServerTarget": "auth-buy-step-product:serve-custom-server:development"
+        },
+        "production": {
+          "buildTarget": "auth-buy-step-product:build:production",
+          "dev": false,
+          "customServerTarget": "auth-buy-step-product:serve-custom-server:production"
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "auth-buy-step-product:build:production"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/auth-buy-step-product/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/auth-buy-step-product/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "build-custom-server": {
+      "executor": "@nx/esbuild:esbuild",
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/auth-buy-step-product",
+        "main": "apps/auth-buy-step-product/server/main.ts",
+        "tsConfig": "apps/auth-buy-step-product/tsconfig.server.json",
+        "clean": false,
+        "assets": [],
+        "platform": "node",
+        "outputFileName": "server/main.js",
+        "format": ["cjs"],
+        "bundle": true,
+        "thirdParty": false,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {
+          "sourcemap": true
+        },
+        "production": {
+          "sourcemap": false,
+          "assets": [".npmrc"]
+        }
+      }
+    },
+    "serve-custom-server": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "auth-buy-step-product:build-custom-server"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "auth-buy-step-product:build-custom-server:development"
+        },
+        "production": {
+          "buildTarget": "auth-buy-step-product:build-custom-server:production"
+        }
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": ["build"],
+      "defaultConfiguration": "local",
+      "options": {
+        "engine": "docker",
+        "context": "dist/apps/auth-buy-step-product",
+        "file": "apps/auth-buy-step-product/Dockerfile"
+      },
+      "configurations": {
+        "local": {
+          "tags": ["auth-buy-step-product:latest"],
+          "push": false
+        },
+        "production": {
+          "tags": ["my.image-registry.com/auth-buy-step-product:latest"],
+          "push": true
+        }
+      }
+    },
+    "prisma-deploy": {
+      "executor": "@nx-tools/nx-prisma:deploy"
+    },
+    "prisma-format": {
+      "executor": "@nx-tools/nx-prisma:format"
+    },
+    "prisma-generate": {
+      "executor": "@nx-tools/nx-prisma:generate"
+    },
+    "prisma-migrate": {
+      "executor": "@nx-tools/nx-prisma:migrate"
+    },
+    "prisma-pull": {
+      "executor": "@nx-tools/nx-prisma:pull"
+    },
+    "prisma-push": {
+      "executor": "@nx-tools/nx-prisma:push"
+    },
+    "prisma-reset": {
+      "executor": "@nx-tools/nx-prisma:reset"
+    },
+    "prisma-resolve": {
+      "executor": "@nx-tools/nx-prisma:resolve"
+    },
+    "prisma-seed": {
+      "executor": "@nx-tools/nx-prisma:seed"
+    },
+    "prisma-status": {
+      "executor": "@nx-tools/nx-prisma:status"
+    },
+    "prisma-studio": {
+      "executor": "@nx-tools/nx-prisma:studio"
+    },
+    "prisma-validate": {
+      "executor": "@nx-tools/nx-prisma:validate"
+    }
+  }
+}

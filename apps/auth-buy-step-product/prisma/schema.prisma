@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // url      = "file:./dev.db"
+  url  	    = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  fulfilled
+  shipped
+  awaiting_shipment
+}
+
+enum PhoneModel {
+  iphonex
+  iphone11
+  iphone12
+  iphone13
+  iphone14
+  iphone15
+}
+
+enum CaseMaterial {
+  silicone
+  polycarbonate
+}
+
+enum CaseFinish {
+  smooth
+  textured
+}
+
+enum CaseColor {
+  black
+  blue
+  rose
+}
+
+model TbConfiguration {
+  id              String        @id @default(cuid())
+  width           Int
+  height          Int
+  imageUrl        String
+  color           String?
+  model           String?
+  material        String?
+  finish          String?
+  croppedImageUrl String?
+  Order           TbOrder[]
+}
+
+model TbUser {
+  id    String  @id @default(cuid())
+  email String
+  Order TbOrder[]
+  IsActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TbOrder {
+  id              Int        @id @default(autoincrement())
+  configurationId String
+  configuration   TbConfiguration @relation(fields: [configurationId], references: [id])
+  user            TbUser          @relation(fields: [userId], references: [id])
+  userId          String
+  amount          Float
+  isPaid          Boolean       @default(false)
+  status          OrderStatus    @default(awaiting_shipment)
+
+  shippingAddress   TbShippingAddress? @relation(fields: [shippingAddressId], references: [id])
+  shippingAddressId   String?
+  temporaryaddress TbTemporaryAddress?
+
+  createdAt DateTime @default(now())
+  updated   DateTime @updatedAt
+}
+
+model TbTemporaryAddress {
+  id          String  @id @default(cuid())
+  street      String
+  city        String
+  postalCode  String
+  country     String
+  state       String?
+  orders      TbOrder @relation(fields: [orderId], references: [id])  
+  orderId     Int  @unique
+}
+
+model TbShippingAddress {
+  id          String  @id @default(cuid())
+  street      String
+  city        String
+  postalCode  String
+  country     String
+  state       String?
+  phoneNumber String?
+  orders      TbOrder[]
+}

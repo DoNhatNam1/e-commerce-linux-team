@@ -1,0 +1,9 @@
+{
+  "name": "auth-buy-step-product-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/auth-buy-step-product-e2e/src",
+  "tags": [],
+  "implicitDependencies": ["auth-buy-step-product"],
+  "// targets": "to see all targets run: nx show project auth-buy-step-product-e2e --web",
+  "targets": {}
+}

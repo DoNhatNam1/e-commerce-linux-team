@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install
+
+      - name: Run Jest tests for auth-buy-step-product
+        run: npx nx test auth-buy-step-product
+
+      # - name: Run Jest tests for api-payment
+      #   run: npx nx test api-payment
+
+      - name: Run Playwright tests for auth-buy-step-product-e2e
+        run: npx nx run auth-buy-step-product-e2e:e2e
+
+      # - name: Run Playwright tests for api-payment-e2e
+      #   run: npx nx e2e api-payment-e2e
+
+  build-finished:
+    runs-on: ubuntu-latest
+    needs: test
+    if: |
+      always() &&
+      (needs.test.result == 'success' || needs.test.result == 'skipped')
+    steps:
+      - name: Trace
+        run: echo "All jobs finished"
+
+  build-and-push:
+    name: Build and Push to ECR
+    runs-on: ubuntu-latest
+    needs: build-finished
+    if: ${{ needs.build-finished.result == 'success' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Automatic Tagging of Releases
+        id: increment-git-tag
+        run: |
+          bash ./build/git_update.sh -v major
+
+      - name: Build, Tag, and Push the Web Image to Amazon ECR
+        id: build-web-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: e-com-linux-team
+          IMAGE_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}-web
+        run: |
+          docker build \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            -f apps/auth-buy-step-product/Dockerfile \
+            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            --build-arg APPID=${{ secrets.APPID }} \
+            --build-arg KEY1=${{ secrets.KEY1 }} \
+            --build-arg KEY2=${{ secrets.KEY2 }} \
+            --build-arg UPLOADTHING_APP_ID=${{ secrets.UPLOADTHING_APP_ID }} \
+            --build-arg UPLOADTHING_SECRET=${{ secrets.UPLOADTHING_SECRET }} \
+            --build-arg KINDE_CLIENT_ID=${{ secrets.KINDE_CLIENT_ID }} \
+            --build-arg KINDE_CLIENT_SECRET=${{ secrets.KINDE_CLIENT_SECRET }} \
+            --build-arg KINDE_ISSUER_URL=${{ secrets.KINDE_ISSUER_URL }} \
+            --build-arg KINDE_SITE_URL=${{ secrets.KINDE_SITE_URL }} \
+            --build-arg KINDE_POST_LOGOUT_REDIRECT_URL=${{ secrets.KINDE_POST_LOGOUT_REDIRECT_URL }} \
+            --build-arg KINDE_POST_LOGIN_REDIRECT_URL=${{ secrets.KINDE_POST_LOGIN_REDIRECT_URL }} \
+            --build-arg RESEND_API_KEY=${{ secrets.RESEND_API_KEY }} \
+            --build-arg ZLP_MERCHANT_CALLBACK_URL=${{ secrets.ZLP_MERCHANT_CALLBACK_URL }} \
+            --build-arg NEXT_PUBLIC_PAYMENT_SERVER=${{ secrets.NEXT_PUBLIC_PAYMENT_SERVER }} \
+            --build-arg NEXT_PUBLIC_SERVER_URL=${{ secrets.NEXT_PUBLIC_SERVER_URL }} \
+            .   
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+      - name: Build, Tag, and Push the Api Payment Image to Amazon ECR
+        id: build-api-payment-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: e-com-linux-team
+          IMAGE_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}-api-payment
+        run: |
+          docker build \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            -f apps/api-payment/Dockerfile \
+            --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            --build-arg APPID=${{ secrets.APPID }} \
+            --build-arg KEY1=${{ secrets.KEY1 }} \
+            --build-arg KEY2=${{ secrets.KEY2 }} \
+            --build-arg ZLP_MERCHANT_CALLBACK_URL=${{ secrets.ZLP_MERCHANT_CALLBACK_URL }} \
+            .
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG

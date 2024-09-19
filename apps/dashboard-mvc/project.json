@@ -1,0 +1,63 @@
+{
+  "name": "dashboard-mvc",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/dashboard-mvc/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/dashboard-mvc",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/dashboard-mvc/src/main.ts",
+        "tsConfig": "apps/dashboard-mvc/tsconfig.app.json",
+        "assets": [
+          {
+            "input": "apps/dashboard-mvc/src/views",
+            "glob": "**/*",
+            "output": "apps/dashboard-mvc/src/views"
+          }
+        ],
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "dashboard-mvc:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "dashboard-mvc:build:development"
+        },
+        "production": {
+          "buildTarget": "dashboard-mvc:build:production"
+        }
+      }
+    }
+  }
+}
