@@ -25,7 +25,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: "npm run serve:auth-buy-step-product",
-    url: "http://localhost:4200",
+    url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     cwd: workspaceRoot,
   },
