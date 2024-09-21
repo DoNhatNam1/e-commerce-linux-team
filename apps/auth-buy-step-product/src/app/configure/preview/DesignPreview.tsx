@@ -5,7 +5,7 @@ import Confetti from "react-dom-confetti";
 
 import { useRouter } from "next/navigation";
 
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Edit } from "lucide-react";
 
 import { Button } from "@e-com-linux-team/shadcn";
 import { cn, formatPrice } from "@e-com-linux-team/shadcn";
@@ -202,10 +202,11 @@ const DesignPreview = ({
                 <div className="flex gap-5">
                   <Button
                     onClick={() => handleOpenAddrForm()}
+                    variant="outline"
                     className="px-4 sm:px-6 lg:px-8"
                   >
                     Sửa địa chỉ{" "}
-                    <ArrowRight className="ml-1.5 inline h-4 w-4" />
+                    <Edit className="ml-1.5 inline h-4 w-4" />
                   </Button>
                   <Button
                     onClick={() => handleCheckout()}

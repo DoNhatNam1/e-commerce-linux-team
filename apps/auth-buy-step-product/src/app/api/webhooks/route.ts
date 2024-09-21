@@ -68,7 +68,9 @@ export async function POST(req: Request) {
         where: { orderId: result.orderId },
       });
 
-      const shippingAddress = await db.tbShippingAddress.findFirst({
+      let shippingAddress;
+      let updatedOrder;
+       shippingAddress = await db.tbShippingAddress.findFirst({
         where: {
           city: temporaryAddress!.city,
           country: temporaryAddress!.country,
@@ -78,9 +80,8 @@ export async function POST(req: Request) {
         },
       });
 
-      let updatedOrder;
       if (!shippingAddress) {
-        const newShippingAddress = await db.tbShippingAddress.create({
+        shippingAddress = await db.tbShippingAddress.create({
           data: {
             city: temporaryAddress!.city,
             country: temporaryAddress!.country,
@@ -92,10 +93,10 @@ export async function POST(req: Request) {
 
         updatedOrder = await db.tbOrder.update({
           where: { id: result.orderId },
-          data: { shippingAddressId: newShippingAddress.id, isPaid: true },
+          data: { shippingAddressId: shippingAddress.id, isPaid: true },
         });
 
-        await db.tbTemporaryAddress.deleteMany({
+        await db.tbTemporaryAddress.delete({
           where: { orderId: updatedOrder.id },
         });
       } else {
@@ -121,6 +122,14 @@ export async function POST(req: Request) {
             react: OrderReceivedEmail({
               orderId: dataJson["app_trans_id"],
               orderDate: updatedOrder.createdAt.toLocaleDateString(),
+              // @ts-ignore
+              shippingAddress: {
+                city: shippingAddress!.city!,
+                country: shippingAddress!.country!,
+                postalCode: shippingAddress!.postalCode!,
+                street: shippingAddress!.street!,
+                state: shippingAddress!.state,
+              },
             }),
           });
         }

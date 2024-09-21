@@ -43,6 +43,6 @@ export function constructMetadata({
       creator: "@joshtriedcoding",
     },
     icons,
-    metadataBase: new URL("https://casecobra.vercel.app/"),
+    metadataBase: new URL("https://be.weldingstoreswebtest.com/"),
   };
 }

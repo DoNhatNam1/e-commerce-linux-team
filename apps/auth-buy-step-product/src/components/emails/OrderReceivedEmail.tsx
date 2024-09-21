@@ -1,3 +1,4 @@
+import { TbShippingAddress } from "@prisma/client";
 import {
   Body,
   Column,
@@ -14,9 +15,11 @@ import {
 } from "@react-email/components";
 
 const OrderReceivedEmail = ({
+  shippingAddress,
   orderId,
   orderDate,
 }: {
+  shippingAddress: TbShippingAddress;
   orderId: string;
   orderDate: string;
 }) => {
@@ -30,10 +33,10 @@ const OrderReceivedEmail = ({
         <Container style={container}>
           <Section style={message}>
             <Img
-              src={`${baseUrl}/images/snake-3.png`}
+              src={`${baseUrl}/images/monkey-3.png`}
               width="65"
               height="73"
-              alt="delivery snake"
+              alt="delivery monkey"
               style={{ margin: "auto" }}
             />
             <Heading style={global.heading}>Cảm ơn bạn đã đặt hàng!</Heading>
@@ -49,6 +52,13 @@ const OrderReceivedEmail = ({
             </Text>
           </Section>
           <Hr style={global.hr} />
+          <Section style={global.defaultPadding}>
+            <Text style={adressTitle}>Đơn hàng giao đến: </Text>
+            <Text style={{ ...global.text, fontSize: 14 }}>
+              {shippingAddress.street}, {shippingAddress.city},{" "}
+              {shippingAddress.state} {shippingAddress.postalCode}
+            </Text>
+          </Section>
           <Hr style={global.hr} />
           <Section style={global.defaultPadding}>
             <Row style={{ display: "inline-flex gap-16", marginBottom: 40 }}>

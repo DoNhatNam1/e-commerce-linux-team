@@ -9,7 +9,7 @@ const configZalo = {
   key1: process.env["KEY1"],
   key2: process.env["KEY2"],
   endpoint: "https://sb-openapi.zalopay.vn/v2/create",
-  callback_url: `https://60aa-2401-d800-daa0-bc0c-6113-8d62-76c6-f56f.ngrok-free.app/api/webhooks`,
+  callback_url: `${process.env["ZLP_MERCHANT_CALLBACK_URL"]}/api/webhooks`,
 };
 
 let prisma: PrismaClient;

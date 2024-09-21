@@ -39,7 +39,7 @@ async function main() {
 
   server.listen(port, hostname);
 
-  console.log(`[ ready ] on http://${hostname}:${port}`);
+  console.log(`[ ready ] on http://${hostname}:${port}/configure/upload`);
 }
 
 main().catch((err) => {
