@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .progress-box {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 48%;
+        }
+
+        .progress-bar {
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+            height: 20px;
+            margin-top: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #4caf50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f8f8;
+        }
+
+        .actions a {
+            margin-right: 10px;
+            color: blue;
+            text-decoration: none;
+        }
+
+        .actions a:last-child {
+            color: red;
+        }
+
+        .logout-btn {
+            background-color: #ff4d4d;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background-color: #ff3333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Order Dashboard</h1>
+        <a href="/logout" class="logout-btn">Logout</a>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-box">
+            <p>Thầu ngày</p>
+            <p><strong>
+                    <%= dailyRevenue.toLocaleString() %> VND
+                </strong></p>
+            <p>Số với mục tiêu: <%= dailyTarget.toLocaleString() %> VND</p>
+            <div class="progress-bar">
+                <div class="progress" id="daily-progress"></div>
+            </div>
+        </div>
+        <div class="progress-box">
+            <p>Thầu tháng này</p>
+            <p><strong>
+                    <%= monthlyRevenue.toLocaleString() %> VND
+                </strong></p>
+            <p>Số với mục tiêu: <%= monthlyTarget.toLocaleString() %> VND</p>
+            <div class="progress-bar">
+                <div class="progress" id="monthly-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <h1>Các đơn đặt hàng đang chờ</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Khách hàng</th>
+                <th>Trạng thái</th>
+                <th>Ngày thanh toán</th>
+                <th>Chi phí</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order=> { %>
+                <tr>
+                    <td><strong>
+                            <%= order.name %>
+                        </strong><br>
+                        <%= order.email %>
+                    </td>
+                    <td>
+                        <select name="status">
+                            <option value="Đang chờ" <%=order.status==="Đang chờ" ? "selected" : "" %>>Đang chờ</option>
+                            <option value="Đã thanh toán" <%=order.status==="Đã thanh toán" ? "selected" : "" %>>Đã
+                                thanh toán</option>
+                        </select>
+                    </td>
+                    <td>
+                        <% if (order.orderDate) { %>
+                            <%= new Date(order.orderDate).toISOString().slice(0, 10) %>
+                                <% } else { %>
+                                    Chưa có ngày
+                                    <% } %>
+                    </td>
+                    <td>
+                        <%= order.cost %> VND
+                    </td>
+                    <td class="actions">
+                        <a href="/orders/edit/<%= order.id %>"><i class="fa fa-edit"></i></a>
+                        <a href="/orders/delete/<%= order.id %>"
+                            onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này không?')">
+                            <i class="fa fa-trash"></i></a>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+
+    <script>
+        // Tính toán và áp dụng độ rộng của thanh tiến trình
+        document.getElementById('daily-progress').style.width = '<%= (dailyRevenue / dailyTarget) * 100 %>%';
+        document.getElementById('monthly-progress').style.width = '<%= (monthlyRevenue / monthlyTarget) * 100 %>%';
+    </script>
+</body>
+
+</html>

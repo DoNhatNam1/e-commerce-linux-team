@@ -1,0 +1,35 @@
+<!-- views/orders.ejs -->
+<h1>Order Dashboard</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Khách hàng</th>
+      <th>Ngày thanh toán</th>
+      <th>Chi phí</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% orders.forEach(order=> { %>
+      <tr>
+        <td>
+          <%= order.customerId %>
+        </td>
+        <td>
+          <%= order.orderDate.toDateString() %>
+        </td>
+        <td>
+          <% let totalCost=0; %>
+            <% order.orderItems.forEach(item=> { totalCost += item.product.price * item.quantity }) %>
+              <%= totalCost %> VND
+        </td>
+        <td>
+          <a href="/orders/<%= order.id %>/edit">🖊 Edit</a>
+          <form action="/orders/delete/<%= order.id %>" method="POST" style="display:inline;">
+            <button type="submit">🗑 Delete</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+  </tbody>
+</table>
