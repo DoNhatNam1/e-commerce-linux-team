@@ -7,7 +7,8 @@
     "prisma-generate:auth-buy-step-product": "nx prisma-generate auth-buy-step-product",
     "build:api-payment": "nx build api-payment",
     "serve:auth-buy-step-product": "nx serve auth-buy-step-product --hostname=0.0.0.0",
-    "serve:api-payment": "nx serve api-payment"
+    "serve:api-payment": "nx serve api-payment",
+    "cp-env-auth-buy-step-product": "powershell -Command \"Copy-Item apps/auth-buy-step-product/.env.local dist/apps/auth-buy-step-product/.env\""
   },
   "private": true,
   "dependencies": {

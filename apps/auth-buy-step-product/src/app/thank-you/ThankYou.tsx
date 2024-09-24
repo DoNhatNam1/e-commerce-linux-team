@@ -16,7 +16,7 @@ const ThankYou = () => {
   const router = useRouter();
 
   const handleGoBackHomePage = () => {
-    router.push("http://localhost:5260");
+    router.push("http://localhost:5249");
   };
 
   const { data } = useQuery({

@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/auth-buy-step-product"
+        "outputPath": "dist/apps/auth-buy-step-product",
+        "assets": ["apps/auth-buy-step-product/.env.local"]
       },
       "configurations": {
         "development": {
