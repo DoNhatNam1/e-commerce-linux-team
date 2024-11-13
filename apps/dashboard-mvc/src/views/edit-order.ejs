@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Order</title>
+    <style>
+        /* Reset mặc định cho các thẻ HTML */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #333;
+        }
+
+        nav {
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        form input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        form button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        form button:hover {
+            background-color: #218838;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Edit Order <%= order.id %>
+        </h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/orders">View Orders</a>
+        </nav>
+
+        <form action="/orders/<%= order.id %>/edit" method="POST">
+            <label for="status">Status:</label>
+            <input type="text" id="status" name="status" value="<%= order.status %>" required>
+            <button type="submit">Update</button>
+        </form>
+    </div>
+</body>
+
+</html>
