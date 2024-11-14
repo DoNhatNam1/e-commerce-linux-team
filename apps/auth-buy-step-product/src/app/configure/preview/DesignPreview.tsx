@@ -205,8 +205,7 @@ const DesignPreview = ({
                     variant="outline"
                     className="px-4 sm:px-6 lg:px-8"
                   >
-                    Sửa địa chỉ{" "}
-                    <Edit className="ml-1.5 inline h-4 w-4" />
+                    Sửa địa chỉ <Edit className="ml-1.5 inline h-4 w-4" />
                   </Button>
                   <Button
                     onClick={() => handleCheckout()}

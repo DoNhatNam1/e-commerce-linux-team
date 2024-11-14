@@ -18,8 +18,9 @@ import * as path from "path";
 
 const dir =
   process.env.NX_NEXT_DIR ||
-  path.join(__dirname, "../../../../apps/auth-buy-step-product");
-const dev = process.env.NODE_ENV === "development";
+  path.join(__dirname, "../../../apps/auth-buy-step-product");
+
+  const dev = process.env.NODE_ENV === 'production';
 
 // HTTP Server options:
 // - Feel free to change this to suit your needs.
@@ -38,8 +39,8 @@ async function main() {
   });
 
   server.listen(port, hostname);
-
-  console.log(`[ ready ] on http://${hostname}:${port}/configure/upload`);
+  
+    console.log(`[ ready ] on ${process.env.NEXT_PUBLIC_SERVER_URL}/configure/upload`);
 }
 
 main().catch((err) => {

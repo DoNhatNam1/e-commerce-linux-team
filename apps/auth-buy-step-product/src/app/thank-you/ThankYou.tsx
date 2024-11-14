@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { ArrowRight, Loader2 } from "lucide-react";
 
@@ -8,15 +8,14 @@ import { Button, formatPrice } from "@e-com-linux-team/shadcn";
 import { useQuery } from "@tanstack/react-query";
 
 import PhonePreview from "../../components/PhonePreview";
-import { getPaymentStatus } from "./actions";
+import { getPaymentStatus, updateUserStatus } from "./actions";
 
 const ThankYou = () => {
   const searchParams = useSearchParams();
   const app_trans_id = searchParams.get("apptransid") || "";
-  const router = useRouter();
 
   const handleGoBackHomePage = () => {
-    router.push("http://localhost:5260");
+    updateUserStatus()
   };
 
   const { data } = useQuery({

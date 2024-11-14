@@ -1,5 +1,7 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 import { prisma as db } from "@e-com-linux-team/config";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
@@ -13,11 +15,7 @@ function extractOrderId(app_trans_id: string): { orderId: number } {
   return { orderId };
 }
 
-export const getPaymentStatus = async ({
-  app_trans_id,
-}: {
-  app_trans_id: string;
-}) => {
+const getPaymentStatus = async ({ app_trans_id }: { app_trans_id: string }) => {
   const result = extractOrderId(app_trans_id);
 
   const { getUser } = getKindeServerSession();
@@ -46,3 +44,19 @@ export const getPaymentStatus = async ({
     return false;
   }
 };
+
+const updateUserStatus = async () => {
+  const { getUser } = getKindeServerSession();
+
+  const user = await getUser();
+  await db.tbUser.update({
+    where: { id: user.id },
+    data: {
+      IsActive: true,
+    },
+  });
+
+  redirect("http://localhost:5249");
+};
+
+export { getPaymentStatus, updateUserStatus };

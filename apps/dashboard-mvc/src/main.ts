@@ -16,12 +16,12 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.urlencoded({ extended: true }));
 
 // Trang chủ (index.ejs)
-app.get('/', (req: Request, res: Response) => {
+app.get('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad', (req: Request, res: Response) => {
   res.render('index');
 });
 
 // Hiển thị danh sách đơn hàng
-app.get('/orders', async (req: Request, res: Response) => {
+app.get('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/orders', async (req: Request, res: Response) => {
   try {
     const orders = await prisma.tbOrder.findMany(); // Không bao gồm user
 
@@ -33,7 +33,7 @@ app.get('/orders', async (req: Request, res: Response) => {
 });
 
 // Hiển thị chi tiết đơn hàng
-app.get('/orders/:id', async (req: Request, res: Response) => {
+app.get('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/orders/:id', async (req: Request, res: Response) => {
   try {
     const order = await prisma.tbOrder.findUnique({
       where: { id: parseInt(req.params.id) },
@@ -52,7 +52,7 @@ app.get('/orders/:id', async (req: Request, res: Response) => {
 
 
 // Hiển thị form chỉnh sửa đơn hàng
-app.get('/orders/:id/edit', async (req: Request, res: Response) => {
+app.get('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/orders/:id/edit', async (req: Request, res: Response) => {
   try {
     const order = await prisma.tbOrder.findUnique({
       where: { id: parseInt(req.params.id) },
@@ -71,7 +71,7 @@ app.get('/orders/:id/edit', async (req: Request, res: Response) => {
 
 
 // Cập nhật thông tin đơn hàng
-app.post('/orders/:id/edit', async (req: Request, res: Response) => {
+app.post('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/orders/:id/edit', async (req: Request, res: Response) => {
   const { status } = req.body;
 
   try {
@@ -80,7 +80,7 @@ app.post('/orders/:id/edit', async (req: Request, res: Response) => {
       data: { status },
     });
 
-    res.redirect('/orders');
+    res.redirect('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/orders');
   } catch (error) {
     console.error('Error updating the order:', error);
     res.status(500).send('Error updating the order');
@@ -88,7 +88,7 @@ app.post('/orders/:id/edit', async (req: Request, res: Response) => {
 });
 
 // Hiển thị danh sách người dùng (TbUser)
-app.get('/users', async (req: Request, res: Response) => {
+app.get('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users', async (req: Request, res: Response) => {
   try {
     const users = await prisma.tbUser.findMany();
 
@@ -100,12 +100,12 @@ app.get('/users', async (req: Request, res: Response) => {
 });
 
 // Hiển thị form thêm người dùng
-app.get('/users/new', (req: Request, res: Response) => {
+app.get('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users/new', (req: Request, res: Response) => {
   res.render('new-user');
 });
 
 // Xử lý thêm người dùng
-app.post('/users/new', async (req: Request, res: Response) => {
+app.post('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users/new', async (req: Request, res: Response) => {
   const { email } = req.body;
 
   try {
@@ -123,7 +123,7 @@ app.post('/users/new', async (req: Request, res: Response) => {
 });
 
 // Hiển thị form chỉnh sửa người dùng
-app.get('/users/:id/edit', async (req: Request, res: Response) => {
+app.get('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users/:id/edit', async (req: Request, res: Response) => {
   try {
     const user = await prisma.tbUser.findUnique({
       where: { id: req.params.id },
@@ -141,7 +141,7 @@ app.get('/users/:id/edit', async (req: Request, res: Response) => {
 });
 
 // Cập nhật thông tin người dùng
-app.post('/users/:id/edit', async (req: Request, res: Response) => {
+app.post('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users/:id/edit', async (req: Request, res: Response) => {
   const { email, isActive } = req.body;
 
   try {
@@ -153,7 +153,7 @@ app.post('/users/:id/edit', async (req: Request, res: Response) => {
       },
     });
 
-    res.redirect('/users');
+    res.redirect('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users');
   } catch (error) {
     console.error('Error updating the user:', error);
     res.status(500).send('Error updating the user');
@@ -183,7 +183,7 @@ const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
 
 // Route xử lý xoá
-app.delete('/users/:id', async (req, res) => {
+app.delete('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users/:id', async (req, res) => {
   try {
     const userId = req.params.id;
 
@@ -191,7 +191,7 @@ app.delete('/users/:id', async (req, res) => {
       where: { id: userId }
     });
 
-    res.redirect('/users');
+    res.redirect('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users');
   } catch (error) {
     console.error('Error deleting user:', error);
     res.status(500).send('Server error');
@@ -202,7 +202,7 @@ app.delete('/users/:id', async (req, res) => {
 
 
 // Khởi động server
-const PORT = process.env.PORT || 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad`);
 });
