@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Orders List</h1>
+    <table class="table table-striped mt-4">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User ID</th>
+
+
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (orders.length> 0) { %>
+          <% orders.forEach(order=> { %>
+            <tr>
+              <td>
+                <%= order.id %>
+              </td>
+              <td>
+                <%= order.userId %>
+              </td>
+
+
+              <td>
+                <%= order.status %>
+              </td>
+              <td>
+                <a href="/orders/<%= order.id %>/edit" class="btn btn-warning">Edit</a>
+                <a href="/orders/<%= order.id %>" class="btn btn-info">View</a>
+
+              </td>
+            </tr>
+            <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="6" class="text-center">No orders found</td>
+                </tr>
+                <% } %>
+      </tbody>
+    </table>
+    <a href="/" class="btn btn-primary">Back to Home</a>
+  </div>
+</body>
+
+</html>
