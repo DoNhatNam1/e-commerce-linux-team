@@ -13,7 +13,8 @@
         "@next/next/no-html-link-for-pages": [
           "error",
           "apps/auth-buy-step-product/pages"
-        ]
+        ],
+        "react/no-unescaped-entities": "off"
       }
     },
     {
