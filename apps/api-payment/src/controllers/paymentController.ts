@@ -2,22 +2,13 @@ import axios from "axios";
 import CryptoJS from "crypto-js";
 import { Request, Response } from "express";
 
-import { configZalo } from "@e-com-linux-team/config";
-
 import { formatDateTimeAndOrderId } from "../models/paymentModel";
 
-interface Address {
-  city: string;
-  country: string;
-  postalCode: string;
-  street: string;
-  state: string;
-}
 
 export const initiatePayment = async (req: Request, res: Response) => {
   const reqData = req.body;
 
-  // console.log(reqData)
+  console.log(reqData)
 
   const dateObject = new Date(reqData.metadata.createAt);
 
@@ -31,32 +22,29 @@ export const initiatePayment = async (req: Request, res: Response) => {
   };
 
 
-  // console.log('addr= ', addr)
-
   const items: any[] = [];
   
-
   const order = {
-    app_id: configZalo.app_id,
+    app_id: reqData.app_id,
     app_trans_id: formattedString,
     app_user: reqData.metadata.userId,
     app_time: Date.now(),
     item: JSON.stringify(items),
     embed_data: JSON.stringify(embed_data),
     amount: reqData.product.default_price_data.unit_amount,
-    callback_url: configZalo.callback_url,
+    callback_url: reqData.callback_url,
     description: reqData.product.name,
     bank_code: "",
   };
 
   console.log('order= ', order)
 
-  const data = `${configZalo.app_id}|${order.app_trans_id}|${order.app_user}|${order.amount}|${order.app_time}|${order.embed_data}|${order.item}`;
+  const data = `${reqData.app_id}|${order.app_trans_id}|${order.app_user}|${order.amount}|${order.app_time}|${order.embed_data}|${order.item}`;
   //@ts-ignore
-  order.mac = CryptoJS.HmacSHA256(data, configZalo.key1).toString();
+  order.mac = CryptoJS.HmacSHA256(data, reqData.key1).toString();
 
   try {
-    const result = await axios.post(configZalo.endpoint, null, {
+    const result = await axios.post(reqData.endpoint, null, {
       params: order,
     });
     return res.status(200).json({url: result.data.order_url});

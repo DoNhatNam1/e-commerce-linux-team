@@ -1,10 +1,9 @@
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import CryptoJS from "crypto-js";
 import { Resend } from "resend";
 
-import { prisma as db, configZalo } from "@e-com-linux-team/config";
+import { prisma as db } from "@e-com-linux-team/config";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import OrderReceivedEmail from "../../../components/emails/OrderReceivedEmail";
@@ -17,6 +16,14 @@ interface ZaloCallbackResponse {
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const configZalo = {
+  app_id: `${process.env.APPID}`,
+  key1: `${process.env.KEY1}`,
+  key2: `${process.env.KEY2}`,
+  endpoint: "https://sb-openapi.zalopay.vn/v2/create",
+  callback_url: `${process.env.ZLP_MERCHANT_CALLBACK_URL}/api/webhooks`,
+};
+
 function extractOrderId(app_trans_id: string): { orderId: number } {
   const parts = app_trans_id.split("_");
 
@@ -27,9 +34,13 @@ function extractOrderId(app_trans_id: string): { orderId: number } {
   return { orderId };
 }
 
+
+
 export async function POST(req: Request) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+
+
 
   let result: ZaloCallbackResponse = {
     return_code: 0,
@@ -135,6 +146,7 @@ export async function POST(req: Request) {
         }
       }
     }
+    return NextResponse.json({ message: "Success", ok: true }, { status: 200 });
   } catch (err) {
     console.error(err);
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Order Details</h1>
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Order ID: <%= order.id %>
+                </h5>
+                <p class="card-text"><strong>User ID:</strong>
+                    <%= order.userId %>
+                </p>
+
+
+                <p class="card-text"><strong>Status:</strong>
+                    <%= order.status %>
+                </p>
+            </div>
+        </div>
+        <a href="/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/orders" class="btn btn-secondary mt-3">Back to Orders</a>
+    </div>
+</body>
+
+</html>

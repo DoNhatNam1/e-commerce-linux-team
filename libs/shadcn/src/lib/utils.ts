@@ -40,9 +40,9 @@ export function constructMetadata({
       title,
       description,
       images: [image],
-      creator: "@joshtriedcoding",
+      creator: "@namit",
     },
     icons,
-    metadataBase: new URL("https://be.weldingstoreswebtest.com/"),
+    metadataBase: new URL("https://a081-115-79-214-187.ngrok-free.app/"),
   };
 }

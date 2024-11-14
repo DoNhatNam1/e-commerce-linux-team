@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+</head>
+
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Users List</h1>
+    <table class="table table-striped mt-4">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Active</th>
+          <th>Created At</th>
+          <th>Updated At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (users.length> 0) { %>
+          <% users.forEach(user=> { %>
+            <tr>
+              <td>
+                <%= user.id %>
+              </td>
+              <td>
+                <%= user.email %>
+              </td>
+              <td>
+                <%= user.IsActive ? 'Yes' : 'No' %>
+              </td>
+              <td>
+                <%= user.createdAt.toLocaleString() %>
+              </td>
+              <td>
+                <%= user.updatedAt.toLocaleString() %>
+              </td>
+              <td>
+                <a href="/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users/<%= user.id %>/edit" class="btn btn-warning">Edit</a>
+                <a href="/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users/<%= user.id %>/delete" class="btn btn-danger">Delete</a>
+              </td>
+            </tr>
+            <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="6" class="text-center">No users found</td>
+                </tr>
+                <% } %>
+      </tbody>
+    </table>
+    <a href="/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users/new" class="btn btn-primary">Add New User</a>
+    <a href="/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad" class="btn btn-primary">Back to Home</a>
+  </div>
+</body>
+
+</html>
