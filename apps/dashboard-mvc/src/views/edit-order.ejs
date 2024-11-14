@@ -65,7 +65,7 @@
             color: #555;
         }
 
-        form input[type="text"] {
+        form select {
             width: 100%;
             padding: 8px;
             margin-bottom: 15px;
@@ -101,16 +101,19 @@
 
 <body>
     <div class="container">
-        <h1>Edit Order <%= order.id %>
-        </h1>
+        <h1>Edit Order <%= order.id %></h1>
         <nav>
             <a href="/">Home</a>
-            <a href="/orders">View Orders</a>
+            <a href="/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/orders">View Orders</a>
         </nav>
 
-        <form action="/orders/<%= order.id %>/edit" method="POST">
+        <form action="/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/orders/<%= order.id %>/edit" method="POST">
             <label for="status">Status:</label>
-            <input type="text" id="status" name="status" value="<%= order.status %>" required>
+            <select id="status" name="status" required>
+                <option value="fulfilled" <%= order.status === 'fulfilled' ? 'selected' : '' %>>Fulfilled</option>
+                <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Shipped</option>
+                <option value="awaiting_shipment" <%= order.status === 'awaiting_shipment' ? 'selected' : '' %>>Awaiting Shipment</option>
+            </select>
             <button type="submit">Update</button>
         </form>
     </div>
