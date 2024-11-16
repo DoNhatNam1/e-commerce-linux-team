@@ -200,6 +200,48 @@ app.delete('/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad/users/:id', async (r
 
 
 
+app.get('/dashboard', async (req, res) => {
+  try {
+    // Doanh thu tuần này
+    const weekRevenue = await prisma.tbOrder.aggregate({
+      _sum: { amount: true },
+      where: {
+        createdAt: {
+          gte: new Date(new Date().setDate(new Date().getDate() - new Date().getDay() + 1)), // Thứ 2 đầu tuần
+          lt: new Date(new Date().setDate(new Date().getDate() - new Date().getDay() + 8)), // Chủ nhật cuối tuần
+        },
+      },
+    });
+
+    // Doanh thu tháng này
+    const monthRevenue = await prisma.tbOrder.aggregate({
+      _sum: { amount: true },
+      where: {
+        createdAt: {
+          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1), // Ngày đầu tháng
+          lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1), // Ngày đầu tháng sau
+        },
+      },
+    });
+
+    // Mục tiêu doanh thu (có thể thay đổi)
+    const weekTarget = 5000000; // 5 triệu VND
+    const monthTarget = 20000000; // 20 triệu VND
+
+    // Gửi dữ liệu sang giao diện
+    res.render('dashboard', {
+      weekRevenue: weekRevenue._sum.amount || 0,
+      monthRevenue: monthRevenue._sum.amount || 0,
+      weekTarget,
+      monthTarget,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Lỗi máy chủ');
+  }
+});
+
+
 
 // Khởi động server
 const PORT = 3001;
