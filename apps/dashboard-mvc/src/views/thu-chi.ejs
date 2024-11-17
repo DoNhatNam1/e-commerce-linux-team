@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Thu Chi</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Quản lý Thu Chi</h1>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-header">Tổng Thu</div>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= totalRevenue %> VND
+                        </h5>
+                        <p class="card-text">Doanh thu từ tất cả các đơn hàng.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-header">Tổng Chi</div>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= totalExpense %> VND
+                        </h5>
+                        <p class="card-text">Chi phí đã sử dụng.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-header">Lợi Nhuận</div>
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= netProfit %> VND
+                        </h5>
+                        <p class="card-text">Tổng lợi nhuận (Tổng Thu - Tổng Chi).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a href="/admin/home/kp_88f06bbd9d7a46c1be5ec054dba0b3ad" class="btn btn-primary">Back to Home</a>
+    </div>
+</body>
+
+</html>
