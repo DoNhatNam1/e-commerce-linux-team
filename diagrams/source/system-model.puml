@@ -1,0 +1,51 @@
+@startuml E-Commerce Phone Case Customization - System Architecture
+
+!define RECTANGLE class
+
+RECTANGLE "Frontend Application" as frontend #LightBlue {
+  RECTANGLE "Next.js Client (auth0buy-step-product)" as nextclient
+  RECTANGLE "Image Upload & Customization" as imgupload
+  RECTANGLE "Phone Case Designer" as editor
+  RECTANGLE "Checkout Process" as checkout
+}
+
+RECTANGLE "Authentication" as auth #LightYellow {
+  RECTANGLE "Auth0 Integration" as auth0
+  RECTANGLE "User Management" as usermgmt
+}
+
+RECTANGLE "Backend Services" as backend #LightGreen {
+  RECTANGLE "API Payment Service (Node.js)" as apipayment
+  RECTANGLE "ZaloPay Integration" as zalo
+  RECTANGLE "Order Processing" as orderproc
+}
+
+RECTANGLE "Admin Dashboard" as dashboard #LightPink {
+  RECTANGLE "Dashboard MVC (Node.js + EJS)" as dashboardmvc
+  RECTANGLE "Order Management" as ordermgmt
+  RECTANGLE "Configuration Viewer" as configviewer
+}
+
+RECTANGLE "Database" as db #LightGray {
+  RECTANGLE "TbUser" as userdb
+  RECTANGLE "TbOrder" as orderdb
+  RECTANGLE "TbConfiguration" as configdb
+  RECTANGLE "TbShippingAddress" as addressdb
+  RECTANGLE "TbTemporaryAddress" as tempaddressdb
+}
+
+RECTANGLE "Storage" as storage #LightCyan {
+  RECTANGLE "Original Images" as userimages
+  RECTANGLE "Cropped Images" as croppedimages
+}
+
+' Connections
+frontend <--> auth : Authentication
+frontend <--> backend : API Calls
+backend <--> dashboard : Data Exchange
+backend <--> db : CRUD Operations
+backend <--> storage : File Operations
+dashboard <--> db : CRUD Operations
+auth <--> db : User Verification
+
+@enduml

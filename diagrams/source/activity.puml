@@ -1,0 +1,46 @@
+@startuml E-Commerce Phone Case Customization - Activity Diagram
+
+start
+:Customer visits website;
+
+:Select phone model;
+:Upload image;
+
+:Customize design|
+note right
+  Position image
+  Add text/effects
+  Change colors
+end note
+
+:Review final design;
+
+if (User logged in?) then (no)
+  :Login or Register;
+else (yes)
+endif
+
+:Enter shipping information;
+:Proceed to payment;
+
+:Redirect to ZaloPay payment gateway;
+
+if (Payment successful?) then (yes)
+  :Create order in system;
+  :Display order confirmation;
+  :Redirect to thank you page;
+  
+  if (Navigate to dashboard?) then (yes)
+    :Display dashboard with order status;
+  else (no)
+    :Stay on thank you page;
+  endif
+  
+else (no)
+  :Display payment error;
+  :Return to payment options;
+endif
+
+stop
+
+@enduml

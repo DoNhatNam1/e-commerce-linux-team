@@ -1,0 +1,99 @@
+@startuml E-Commerce Phone Case Customization - ERD
+
+' Define enums
+enum OrderStatus {
+  fulfilled
+  shipped
+  awaiting_shipment
+}
+
+enum PhoneModel {
+  iphonex
+  iphone11
+  iphone12
+  iphone13
+  iphone14
+  iphone15
+}
+
+enum CaseMaterial {
+  silicone
+  polycarbonate
+}
+
+enum CaseFinish {
+  smooth
+  textured
+}
+
+enum CaseColor {
+  black
+  blue
+  rose
+}
+
+' Define entities
+entity "TbConfiguration" as config {
+  *id : TEXT <<PK>>
+  --
+  width : INTEGER
+  height : INTEGER
+  imageUrl : TEXT
+  color : TEXT
+  model : TEXT
+  material : TEXT
+  finish : TEXT
+  croppedImageUrl : TEXT
+}
+
+entity "TbUser" as user {
+  *id : TEXT <<PK>>
+  --
+  email : TEXT
+  IsActive : BOOLEAN
+  createdAt : TIMESTAMP
+  updatedAt : TIMESTAMP
+}
+
+entity "TbOrder" as order {
+  *id : SERIAL <<PK>>
+  --
+  *configurationId : TEXT <<FK>>
+  *userId : TEXT <<FK>>
+  amount : DOUBLE PRECISION
+  isPaid : BOOLEAN
+  status : OrderStatus
+  shippingAddressId : TEXT <<FK>>
+  createdAt : TIMESTAMP
+  updated : TIMESTAMP
+}
+
+entity "TbTemporaryAddress" as tempAddr {
+  *id : TEXT <<PK>>
+  --
+  street : TEXT
+  city : TEXT
+  postalCode : TEXT
+  country : TEXT
+  state : TEXT
+  *orderId : INTEGER <<FK>>
+}
+
+entity "TbShippingAddress" as shippingAddr {
+  *id : TEXT <<PK>>
+  --
+  street : TEXT
+  city : TEXT
+  postalCode : TEXT
+  country : TEXT
+  state : TEXT
+  phoneNumber : TEXT
+}
+
+' Define relationships
+user ||--o{ order : places
+config ||--o{ order : used in
+shippingAddr ||--o{ order : ships to
+order ||--o| tempAddr : has temporary
+
+@enduml

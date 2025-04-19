@@ -1,0 +1,35 @@
+@startuml E-Commerce Phone Case Customization - Sequence Diagram
+
+actor Customer as customer
+participant "Frontend\n(NextJS)" as frontend
+participant "Auth System\n(Auth0)" as auth
+participant "Order Processing\n(NodeJS)" as order
+participant "Payment API\n(ZaloPay)" as payment
+participant "Dashboard\n(NodeJS+EJS)" as dashboard
+
+customer -> frontend: Visit website
+frontend -> frontend: Select phone case
+
+customer -> frontend: Upload custom image
+frontend -> frontend: Customize design
+
+customer -> frontend: Review final design
+frontend -> auth: Request login/register
+auth --> customer: Authentication dialog
+customer -> auth: Provide credentials
+auth --> frontend: Authentication token
+
+frontend -> customer: Request shipping information
+customer -> frontend: Provide shipping address
+
+frontend -> payment: Initialize payment
+payment --> customer: Display payment interface
+customer -> payment: Complete ZaloPay payment
+payment --> order: Payment confirmation
+
+order -> frontend: Order confirmation
+frontend -> customer: Display thank you page
+customer -> dashboard: Navigate to dashboard
+dashboard -> customer: Display order status
+
+@enduml

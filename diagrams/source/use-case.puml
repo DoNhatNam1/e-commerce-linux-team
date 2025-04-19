@@ -1,0 +1,41 @@
+@startuml E-Commerce Phone Case Customization - Use Case Diagram
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor Customer as customer
+actor Administrator as admin
+actor "Payment System" as payment
+
+rectangle "E-Commerce Phone Case Customization System" {
+  usecase "Register/Login" as UC1
+  usecase "Upload Image" as UC2
+  usecase "Customize Phone Case" as UC3
+  usecase "Review Customization" as UC4
+  usecase "Enter Shipping Address" as UC5
+  usecase "Make Payment via ZaloPay" as UC6
+  usecase "View Order Confirmation" as UC7
+  usecase "Access Dashboard" as UC8
+  usecase "Manage Orders" as UC9
+  usecase "Process Payments" as UC10
+}
+
+customer --> UC1
+customer --> UC2
+customer --> UC3
+customer --> UC4
+customer --> UC5
+customer --> UC6
+customer --> UC7
+customer --> UC8
+
+admin --> UC9
+payment --> UC10
+
+UC2 ..> UC1 : <<include>>
+UC5 ..> UC4 : <<include>>
+UC6 ..> UC5 : <<include>>
+UC7 ..> UC6 : <<include>>
+UC8 ..> UC7 : <<extend>>
+
+@enduml

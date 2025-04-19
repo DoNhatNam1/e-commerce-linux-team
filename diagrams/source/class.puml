@@ -1,0 +1,100 @@
+@startuml E-Commerce Phone Case Customization - Class Diagram
+
+enum OrderStatus {
+  FULFILLED
+  SHIPPED
+  AWAITING_SHIPMENT
+}
+
+enum PhoneModel {
+  IPHONEX
+  IPHONE11
+  IPHONE12
+  IPHONE13
+  IPHONE14
+  IPHONE15
+}
+
+enum CaseMaterial {
+  SILICONE
+  POLYCARBONATE
+}
+
+enum CaseFinish {
+  SMOOTH
+  TEXTURED
+}
+
+enum CaseColor {
+  BLACK
+  BLUE
+  ROSE
+}
+
+class User {
+  +id: string
+  +email: string
+  +isActive: boolean
+  +createdAt: datetime
+  +updatedAt: datetime
+  +getOrders()
+}
+
+class Configuration {
+  +id: string
+  +width: number
+  +height: number
+  +imageUrl: string
+  +color: string
+  +model: string
+  +material: string
+  +finish: string
+  +croppedImageUrl: string
+  +saveConfiguration()
+  +updateConfiguration()
+}
+
+class Order {
+  +id: number
+  +configurationId: string
+  +userId: string
+  +amount: number
+  +isPaid: boolean
+  +status: OrderStatus
+  +shippingAddressId: string
+  +createdAt: datetime
+  +updated: datetime
+  +getOrderDetails()
+  +updateStatus()
+  +processPayment()
+}
+
+class TemporaryAddress {
+  +id: string
+  +street: string
+  +city: string
+  +postalCode: string
+  +country: string
+  +state: string
+  +orderId: number
+  +saveAddress()
+}
+
+class ShippingAddress {
+  +id: string
+  +street: string
+  +city: string
+  +postalCode: string
+  +country: string
+  +state: string
+  +phoneNumber: string
+  +saveAddress()
+  +updateAddress()
+}
+
+User "1" -- "many" Order : places
+Configuration "1" -- "many" Order : used in
+ShippingAddress "1" -- "many" Order : ships to
+Order "1" -- "0..1" TemporaryAddress : has temporary
+
+@enduml

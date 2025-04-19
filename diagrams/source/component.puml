@@ -1,0 +1,74 @@
+@startuml E-Commerce Phone Case Customization - Component Diagram
+
+package "Frontend (Next.js - auth0buy-step-product)" {
+  [Image Uploader] as imgUpload
+  [Phone Case Designer] as designer
+  [Model Selector] as modelSelector
+  [Checkout Flow] as checkout
+  [Auth Client] as authClient
+}
+
+package "Authentication" {
+  [Auth0 Integration] as auth0
+}
+
+package "API Payment Service (Node.js)" {
+  [ZaloPay Gateway] as zaloGateway
+  [Payment Processing] as paymentProc
+  [Order API] as orderAPI
+}
+
+package "Dashboard MVC (Node.js + EJS)" {
+  [Admin Views] as adminViews
+  [Order Management] as orderMgmt
+  [Configuration Management] as configMgmt
+}
+
+database "Database" {
+  [TbUser] as usersDB
+  [TbOrder] as ordersDB
+  [TbConfiguration] as configDB
+  [TbShippingAddress] as shippingDB
+  [TbTemporaryAddress] as tempAddrDB
+}
+
+cloud "Cloud Storage" {
+  [Original Images] as origImages
+  [Cropped Images] as croppedImages
+}
+
+' Define interfaces
+interface "HTTP/REST" as restAPI
+interface "Auth API" as authAPI
+interface "Payment API" as paymentAPI
+interface "Storage API" as storageAPI
+interface "Admin API" as adminAPI
+
+' Connect components to interfaces
+imgUpload -- storageAPI
+designer -- storageAPI
+modelSelector -- restAPI
+checkout -- paymentAPI
+authClient -- authAPI
+auth0 -- authAPI
+zaloGateway -- paymentAPI
+paymentProc -- restAPI
+orderAPI -- restAPI
+adminViews -- adminAPI
+orderMgmt -- adminAPI
+configMgmt -- adminAPI
+
+' Connect interfaces to components/databases
+storageAPI -- origImages
+storageAPI -- croppedImages
+authAPI -- usersDB
+restAPI -- ordersDB
+restAPI -- configDB
+restAPI -- shippingDB
+restAPI -- tempAddrDB
+paymentAPI -- ordersDB
+adminAPI -- ordersDB
+adminAPI -- usersDB
+adminAPI -- configDB
+
+@enduml
